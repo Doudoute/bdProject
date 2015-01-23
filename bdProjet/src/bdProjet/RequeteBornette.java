@@ -1,11 +1,12 @@
 package bdProjet;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 public class RequeteBornette {
+	
 	/**
 	 * Ajout d'une bornette dans la base de donnees
 	 * 
