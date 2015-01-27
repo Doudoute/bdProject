@@ -65,9 +65,21 @@ public class Test {
 		  
 		  /********************************************* CLIENT *********************************************/
 		  // Ajouter un nouveau client
-//		  RequeteClient.ajouterClient(conn, 97, "1234567891234567", 1587);
+//		  RequeteClient.ajouterClient(conn, "1234567891234567", 1587);
+		  
+		  // Supprimer un client
+//		  RequeteClient.supprimerClient(conn, 97);
+		  
+		  // Mettre a jour le numero de CB d'un client
+//		  RequeteClient.miseAJourNumCB(conn, 81, "9999999999999999");
 		  /***************************************************************************************************/
 
+		  
+		  /********************************************* ABONNE *********************************************/
+		  // Ajouter un nouvel abonne
+		  RequeteAbonne.ajouterAbonne(conn, 37, "Martin", "Mathieu", "21/04/1887", "masculin", "43 rue Fontaine de Barbin 44000 Nantes");
+		  /***************************************************************************************************/
+//		  RequeteVehiculeRegulation.afficherLesRoutine(conn, 02);
 		  
 	      conn.close() ;
 	  }
