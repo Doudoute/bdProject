@@ -136,15 +136,18 @@ public class RequeteVelo {
 	public static ArrayList<Velo> getVelosDispo(Connection conn, String nomStation) throws SQLException {
 		ArrayList<Velo> result= new ArrayList<Velo>();
 		  // Get a statement from the connection
-	      PreparedStatement stmt = conn.prepareStatement("SELECT count(numPuceRFID) FROM Velo v, Bornette b, Stock s"
-		      		+ "  WHERE v.numVelo = s.numVelo"
-		      		+ "AND s.numBornette = b.numBornette"
-		      		+ "AND b.adresse  like '?%'"
-		    		+ "AND v.etatvelo = 'enStation'") ;
-	      stmt.setString(1, nomStation);
+	      Statement stmt = conn.createStatement() ;
+
 
 	      // Execute the query
-	      ResultSet rs = stmt.executeQuery();
+	      String query = "SELECT v.numPuceRFID, v.etatVelo "
+	    		  		+ "FROM Velo v, Bornette b, Stocke s "
+	    		  		+ "WHERE v.numPuceRFID = s.numVelo "
+	    		  		+ "AND s.numBornette = b.numBornette "
+	    		  		+" AND b.adresse like '"+nomStation +"%' "
+	    		  		+ "AND v.etatVelo = 'enStation' ";
+	      
+	      ResultSet rs = stmt.executeQuery(query);
 	      while( rs.next() ) {
 	    	  result.add(new Velo(rs.getInt("numPuceRFID"), rs.getString("etatVelo")));
 	      }

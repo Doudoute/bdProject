@@ -152,18 +152,19 @@ public class Location {
 	// poursuit la location avec le code secret du client 
 	// ou le code généré par l'application
 	private void Next(int code, String numCB) {
+
 		try {
 			ArrayList<Velo> velosDispo = RequeteVelo.getVelosDispo(conn, station);
 			int numVelo = velosDispo.get(0).getNumRFID();
 			int numBorne = RequeteVelo.retrieveNumBornetteByNumVelo(conn, numVelo);
-			
+
 			RequeteVelo.creerLocation(conn, velosDispo.get(0).getNumRFID(), client.getNumClient());
 			JOptionPane.showMessageDialog(frmVpickClient, "Location créée : \n"
 														+ "Client N°" +client.getNumClient()+
 														"\n Velo N°"+numVelo+
 														"\n Allez le chercher à la BORNE N°"+numBorne);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(frmVpickClient, "Erreur dans la location du Velo. Veuillez contacter le support si le problème se répète. \n" + e.getMessage());
+			JOptionPane.showMessageDialog(frmVpickClient, "Erreur dans la location du Velo. Veuillez contacter le support si le problème se répète. \n" + e.toString() );
 		}
 	}
 	
