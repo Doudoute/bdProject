@@ -104,7 +104,6 @@ CONSTRAINT ck_etat_ordre CHECK (etatOrdre IN ('nonEffectue', 'valide', 'annule',
 CREATE TABLE Stocke (
 numVelo INTEGER NOT NULL CHECK(numVelo > 0),
 numBornette INTEGER NOT NULL CHECK(numBornette > 0),
-dateStockage date NOT NULL,
 CONSTRAINT pk_stocke PRIMARY KEY (numVelo, numBornette),
 CONSTRAINT fk_stocke_numVelo FOREIGN KEY (numVelo) REFERENCES Velo(numPuceRFID),
 CONSTRAINT fk_stocke_numBornette FOREIGN KEY (numBornette) REFERENCES Bornette(numBornette)
