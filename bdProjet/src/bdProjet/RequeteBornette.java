@@ -99,4 +99,39 @@ public class RequeteBornette {
 		
 	}
 	
+	public static String[] getAdresseBornes(Connection conn) throws SQLException {
+		// Get a statement from the connection
+	      Statement stmt = conn.createStatement() ;
+	    // Execute the query
+	    ResultSet rs = stmt.executeQuery("SELECT distinct(adresse)FROM Bornette");
+	    
+	    String[] resultat = new String[10];
+	    int i = 0;
+	    while( rs.next() ) {
+	        resultat[i] = rs.getString("adresse").split(" - ")[0];
+	        i++;
+	      }
+	    return resultat;	    
+	}
+	
+	public static String[] getVeloAssocieBorne(Connection conn, String adresse) throws SQLException{
+		// Get a statement from the connection
+	      Statement stmt = conn.createStatement() ;
+	    // Execute the query
+	    ResultSet rs = stmt.executeQuery("select numvelo "
+	    								+"from stocke "
+	    								+"where numbornette "
+	    								+ "IN (select numbornette "
+	    									+ "from bornette "
+	    									+ "where adresse like '"+adresse+"%')");
+	    
+	    String[] resultat = new String[10];
+	    int i = 0;
+	    while( rs.next() ) {
+	        resultat[i] = rs.getString("numvelo");
+	        i++;
+	      }
+	    return resultat;
+	}
+	
 }
