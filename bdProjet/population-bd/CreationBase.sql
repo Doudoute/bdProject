@@ -114,7 +114,7 @@ numVelo integer NOT NULL CHECK(numVelo > 0),
 dateEbq date NOT NULL,
 numVehicule integer NOT NULL CHECK(numVehicule > 0),
 adresseDep varchar(150) NOT NULL,
-adresseArr varchar(150) NOT NULL,
+adresseArr varchar(150),
 CONSTRAINT pk_embarque PRIMARY KEY (numVelo, dateEbq),
 CONSTRAINT fk_embarque_numVelo FOREIGN KEY (numVelo) REFERENCES Velo(numPuceRFID),
 CONSTRAINT fk_embarque_numVehicule FOREIGN KEY (numVehicule) REFERENCES VehiculeRegulation(numVehicule)

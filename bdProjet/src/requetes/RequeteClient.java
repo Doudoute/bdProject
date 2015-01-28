@@ -47,9 +47,10 @@ public class RequeteClient {
 		  Statement stmt = conn.createStatement();
 		  
 		  // Execute the query
-		  int dernierNumClientUtilise = stmt.executeUpdate("SELECT MAX(numClient) FROM Client");
+		  ResultSet dernierNumClientUtilise = stmt.executeQuery("SELECT MAX(numClient) FROM Client");
+		  dernierNumClientUtilise.next();
 		  
-		  int numNouveauClient = dernierNumClientUtilise + 1;
+		  int numNouveauClient = Integer.parseInt(dernierNumClientUtilise.getString(1)) + 1;
 		  
 		  // Close the result set, statement and the connection
 	      stmt.close();
