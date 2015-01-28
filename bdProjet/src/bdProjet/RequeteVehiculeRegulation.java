@@ -80,17 +80,26 @@ public class RequeteVehiculeRegulation {
 	public static String[][] getRoutine(Connection conn, int numVehicule) throws SQLException{
 		// Get a statement from the connection
 	      Statement stmt = conn.createStatement() ;
-	    // Execute the query
-	    ResultSet rs = stmt.executeQuery( " Select O.rang ,T.description,O.etatOrdre"+
+
+	      ResultSet num = stmt.executeQuery("SELECT count(O.rang) FROM Tache T, Ordre O, VehiculeRegulation V "
+	      			+ "WHERE V.numVehicule = "+numVehicule+
+					" AND V.numRoutine = O.numRoutine"+
+					" AND O.numTache = T.numTache ORDER BY O.rang");
+	      num.next();
+	      
+	      String[][] resultat = new String[Integer.parseInt(num.getString(1))][2];
+	      
+	      // Execute the query
+	      ResultSet rs = stmt.executeQuery( " Select O.rang ,T.description,O.etatOrdre"+
 					" From Tache T, Ordre O, VehiculeRegulation V"+
 					" Where V.numVehicule = "+numVehicule+
 					" AND V.numRoutine = O.numRoutine"+
 					" AND O.numTache = T.numTache ORDER BY O.rang");
 	    
-	    String[][] resultat = new String[20][20];
 	    int i = 0;
 	    int j = 0;
 	    while( rs.next() ) {
+	    	j=0;
 	        resultat[i][j] = rs.getString("description");
 	        j++;
 	        resultat[i][j] = rs.getString("etatOrdre");
