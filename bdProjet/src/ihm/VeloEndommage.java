@@ -1,4 +1,4 @@
-package bdProjet;
+package ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -19,6 +19,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.swing.JList;
+
+import requetes.RequeteBornette;
+import requetes.RequeteVelo;
 
 
 public class VeloEndommage extends JFrame {
