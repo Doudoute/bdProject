@@ -59,7 +59,7 @@ public class RequeteVehiculeRegulation {
 	    		  							" From Tache T, Ordre O, VehiculeRegulation V"+
 	    		  							" Where V.numVehicule = "+numVehicule+
 	    		  							" AND V.numRoutine = O.numRoutine"+
-	    		  							" AND O.numTache = T.numTache ORDER BY O.rang;") ;
+	    		  							" AND O.numTache = T.numTache ORDER BY O.rang") ;
 	      System.out.println("Liste des tâches associé au véhicule avec leurs états : " ) ;
 	      // Loop through the result set
 	      while( rs.next() ) {
@@ -75,6 +75,27 @@ public class RequeteVehiculeRegulation {
 	      // Close the result set, statement and the connection
 	      rs.close() ;
 	      stmt.close() ;
-		
+	}
+	
+	public static String[][] getRoutine(Connection conn, int numVehicule) throws SQLException{
+		// Get a statement from the connection
+	      Statement stmt = conn.createStatement() ;
+	    // Execute the query
+	    ResultSet rs = stmt.executeQuery( " Select O.rang ,T.description,O.etatOrdre"+
+					" From Tache T, Ordre O, VehiculeRegulation V"+
+					" Where V.numVehicule = "+numVehicule+
+					" AND V.numRoutine = O.numRoutine"+
+					" AND O.numTache = T.numTache ORDER BY O.rang");
+	    
+	    String[][] resultat = new String[20][20];
+	    int i = 0;
+	    int j = 0;
+	    while( rs.next() ) {
+	        resultat[i][j] = rs.getString("description");
+	        j++;
+	        resultat[i][j] = rs.getString("etatOrdre");
+	        i++;
+	      }
+		return resultat;
 	}
 }

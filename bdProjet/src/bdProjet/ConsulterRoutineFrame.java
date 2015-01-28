@@ -2,6 +2,7 @@ package bdProjet;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -9,12 +10,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JTable;
 
 
 public class ConsulterRoutineFrame extends JFrame {
 
 	private JPanel contentPane;
 	private Connection conn;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -60,11 +63,19 @@ public class ConsulterRoutineFrame extends JFrame {
 		lblListeDesRoutines.setBounds(97, 54, 152, 15);
 		contentPane.add(lblListeDesRoutines);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(97, 81, 262, 180);
-		contentPane.add(scrollPane);
+		String[][] resultatRequete = {};
+		try {
+			resultatRequete = RequeteVehiculeRegulation.getRoutine(conn, Integer.parseInt(log));
 		
-		JList list = new JList();
-		scrollPane.setViewportView(list);
+		} catch (NumberFormatException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String[] titreColonnes = {"Etape","Etat"};
+		
+		table = new JTable(resultatRequete,titreColonnes);
+		table.setBounds(97, 81, 256, 180);
+		contentPane.add(table);
 	}
 }
