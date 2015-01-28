@@ -34,6 +34,7 @@ public class Location {
 	
 	private JFrame frmVpickClient;
 	private JPasswordField passwordField;
+	private String station;
 	
 	
 	public void setVisible(boolean isVisible){
@@ -45,7 +46,8 @@ public class Location {
 	 * Create the application.
 	 * @param application_Borne 
 	 */
-	public Location(Application_Borne application_Borne, Connection conn) {
+	public Location(Application_Borne application_Borne, Connection conn, String station) {
+		this.station = station;
 		this.app = application_Borne;
 		this.conn = conn;
 		initialize();
@@ -122,6 +124,7 @@ public class Location {
 				Next(code, numCB);
 			}
 		});
+		
 		btnMeGnrerUn.setFont(new Font("Dialog", Font.PLAIN, 12));
 		btnMeGnrerUn.setBounds(235, 128, 199, 25);
 		frmVpickClient.getContentPane().add(btnMeGnrerUn);
@@ -150,7 +153,7 @@ public class Location {
 	// ou le code généré par l'application
 	private void Next(int code, String numCB) {
 		try {
-			ArrayList<Velo> velosDispo = RequeteVelo.getVelosDispo(conn);
+			ArrayList<Velo> velosDispo = RequeteVelo.getVelosDispo(conn, station);
 			int numVelo = velosDispo.get(0).getNumRFID();
 			int numBorne = RequeteVelo.retrieveNumBornetteByNumVelo(conn, numVelo);
 			
