@@ -125,7 +125,7 @@ public class RequeteBornette {
 	    									+ "from bornette "
 	    									+ "where adresse like '"+adresse+"%')");
 	    
-	    String[] resultat = new String[10];
+	    String[] resultat = new String[30];
 	    int i = 0;
 	    while( rs.next() ) {
 	        resultat[i] = rs.getString("numvelo");
