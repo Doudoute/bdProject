@@ -396,7 +396,6 @@ INSERT INTO Ordre VALUES (04,03,03,'nonEffectue');
 INSERT INTO Ordre VALUES (05,03,06,'nonEffectue');
 INSERT INTO Ordre VALUES (06,03,10,'nonEffectue');
 
-
 INSERT INTO Amende VALUES (01,TO_DATE('01/01/2015','dd/mm/yyyy'), 'apayer');
 INSERT INTO Amende VALUES (02,TO_DATE('12/10/2014','dd/mm/yyyy'), 'apayer');
 INSERT INTO Amende VALUES (03,TO_DATE('14/12/2014','dd/mm/yyyy'), 'apayer');
