@@ -55,7 +55,7 @@ modele VARCHAR(10),
 dateMES date NOT NULL,
 etatVelo VARCHAR(25),
 CONSTRAINT ck_modele_velo CHECK (modele IN ('pliant', 'electrique', 'VTT', 'route')),
-CONSTRAINT ck_etat_velo CHECK (etatVelo IN ('enStation', 'embarque', 'réparation', 'enPanne'))
+CONSTRAINT ck_etat_velo CHECK (etatVelo IN ('enStation', 'loue', 'embarque', 'réparation', 'enPanne'))
 );
 
 CREATE TABLE Amende (
@@ -83,6 +83,7 @@ prenom VARCHAR(50) NOT NULL,
 dateNaissance date NOT NULL,
 sexe VARCHAR(8),
 adresse VARCHAR(150) NOT NULL,
+dateAbo date NOT NULL,
 etatAbo VARCHAR(7),
 CONSTRAINT fk_abonne FOREIGN KEY (numAbonne) REFERENCES Client(numClient),
 CONSTRAINT ck_sexe CHECK (sexe IN ('feminin', 'masculin')),

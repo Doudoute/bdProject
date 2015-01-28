@@ -1,4 +1,6 @@
-package bdProjet;
+package ihm;
+import ihm.ConducteurFrame;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -19,6 +21,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTable;
+
+import requetes.RequeteVehiculeRegulation;
 
 
 public class ConsulterRoutineFrame extends JFrame {

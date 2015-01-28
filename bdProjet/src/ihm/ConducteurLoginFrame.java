@@ -1,4 +1,4 @@
-package bdProjet;
+package ihm;
 import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,6 +10,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+
+import bdProjet.DatabaseAccessProperties;
+import bdProjet.SQLWarningsExceptions;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
