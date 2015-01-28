@@ -1,7 +1,12 @@
 package requetes;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import mapping.Client;
+
 
 
 public class RequeteClient {
@@ -27,6 +32,26 @@ public class RequeteClient {
 	      // Close the result set, statement and the connection
 	      stmt.close() ;
 		
+	}
+	
+	//Retrouve le client à partir du numéro de CB et du code secret
+	public static Client retrieveClientByCBandSecretCode(Connection conn, int code, String numCB) throws SQLException {
+		  Client result = null;
+	      // Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Client WHERE codeSecret = ? AND numCB=?");
+	      stmt.setInt(1, code);
+	      stmt.setString(2, numCB);
+
+	      // Execute the query
+	      ResultSet rs = stmt.executeQuery();
+	      if( rs.next() ) {
+	    	  result = new Client(rs.getInt("numClient"), rs.getInt("codeSecret"),rs.getString("numCB"));
+	      }
+
+	      // Close the result set, statement and the connection
+	      stmt.close() ;
+	      
+	      return result;
 	}
 	
 	
