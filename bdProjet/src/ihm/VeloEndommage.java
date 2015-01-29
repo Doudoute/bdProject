@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import javax.swing.JList;
 
 import requetes.RequeteBornette;
+import requetes.RequeteEmbarque;
 import requetes.RequeteVelo;
 
 
@@ -226,6 +227,7 @@ public class VeloEndommage extends JFrame {
 					}
 					else if (rdbtnEmbarqu.isSelected()){
 						RequeteVelo.miseAJourVelo(conn, Integer.parseInt(numeroVelo), "embarque");
+						RequeteEmbarque.setEmbarquement(conn, numeroVelo, log, adresseSelectionnee);
 					}				
 					else if (rdbtnEnRparation.isSelected()){
 						RequeteVelo.miseAJourVelo(conn, Integer.parseInt(numeroVelo), "reparation");
