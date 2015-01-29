@@ -1,5 +1,6 @@
 package requetes;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -118,10 +119,15 @@ public class RequeteClient {
 	      }
 
 	      // Close the result set, statement and the connection
+	      rs.close();
 	      stmt.close() ;
 	      
 	      return result;
 	}
+
+	
+	
+	
 	
 	
 }

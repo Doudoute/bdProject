@@ -73,7 +73,7 @@ public class Application_Borne {
 	      Class.forName(jdbcDriver) ;
 
 	      // Get a connection to the database
-	      Connection conn = DriverManager.getConnection(dbUrl, "meunierk", "bd2015");
+	      Connection conn = DriverManager.getConnection(dbUrl, "salinasc", "bd2015");
 
 		  // Print information about connection warnings
 		  SQLWarningsExceptions.printWarnings(conn);
