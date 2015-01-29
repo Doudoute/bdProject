@@ -1,5 +1,6 @@
 package requetes;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -215,6 +216,9 @@ public class RequeteVelo {
 	      stmt.close() ;
 	}
 
+	
+	
+	
 	public static void retirerVelo(Connection conn, int numVelo) throws SQLException {
 		
 		 // Get a statement from the connection
@@ -254,11 +258,12 @@ public class RequeteVelo {
 
 	public static boolean isSecretCodeCheckedForVelo(Connection conn, int code, int numVelo) throws SQLException {
 		 // Get a statement from the connection
-	      PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Velo v, Loue l, Client c"
+	      PreparedStatement stmt = conn.prepareStatement("SELECT c.codeSecret FROM Velo v, Loue l, Client c"
 		      		+ " WHERE v.numPuceRFID = l.numVelo"
 		      		+ " AND l.numClient = c.numClient"
 		      		+ " AND v.numPuceRFID = ?"
-		      		+ " AND c.codeSecret = ?");
+		      		+ " AND c.codeSecret = ?"
+		      		+ " AND l.dateFin IS NULL");
 	      stmt.setInt(1, numVelo);
 	      stmt.setInt(2, code);
 
@@ -275,7 +280,7 @@ public class RequeteVelo {
 	//retirer le vélo des vélos loués
 	public static void removeVeloFromLocation(Connection conn, int numVelo) throws SQLException{
 		 // Get a statement from the connection
-	      PreparedStatement stmt = conn.prepareStatement("DELETE FROM Location WHERE numVelo = ?");
+	      PreparedStatement stmt = conn.prepareStatement("DELETE FROM Loue WHERE numVelo = ?");
 	      stmt.setInt(1, numVelo);
 
 	      ResultSet rs = stmt.executeQuery();
@@ -290,17 +295,16 @@ public class RequeteVelo {
 	public static int getNumBornetteLibre(Connection conn, String station) throws SQLException{
 		int result = -1;
 		// Get a statement from the connection
-	      PreparedStatement stmt = conn.prepareStatement("SELECT numBornette "
-	      												+ " FROM Bornette"
-	      												+ " WHERE Bornette.adresse like '%?'"
-	      												+ " AND numBornette NOT INT("
-	      														+ "SELECT numBornette"
-	      														+ "FROM bornette b, Velo v, Stocke s"
-	      														+ "WHERE b.numBornette = s;numBornette"
-	      														+ "AND s.numVelo = v.numPuceRFID) ");
-	      stmt.setString(1, station);
-	      ResultSet rs = stmt.executeQuery();
-	      
+	      Statement stmt = conn.createStatement();
+	      ResultSet rs = stmt.executeQuery("SELECT b.numBornette "
+							+ " FROM Bornette b"
+							+ " WHERE b.adresse like '%"+ station+"%'"
+							+ " AND b.numBornette NOT IN("
+							+ "SELECT b.numBornette"
+							+ " FROM Bornette b, Velo v, Stocke s"
+							+ " WHERE b.numBornette = s.numBornette"
+							+ " AND s.numVelo = v.numPuceRFID) ");
+	      	      
 	      if(rs.next()){
 	    	  result = rs.getInt("numBornette");
 	      }
@@ -345,6 +349,56 @@ public class RequeteVelo {
 	      stmt.close() ;
 	      
 	      return result;
+	}
+	
+
+	// crééer l'amende et la lie à la location
+	public static void creerAmende(Connection conn, int numVelo) throws SQLException {
+
+	     // Get a statement from the connection
+	     PreparedStatement stmt = conn.prepareStatement("SELECT MAX(numAmende) FROM Amende");
+		 ResultSet rs = stmt.executeQuery();
+		 
+		 int numAmende = rs.getInt("numAmende");
+		 if(rs.next()){
+			  numAmende = rs.getInt("numAmende");
+		 }
+		 else{
+			 numAmende = 1;
+		 }
+		 
+		 // créer l'amende
+	     stmt = conn.prepareStatement("INSERT INTO Amende Values(?,?,?)");
+	     stmt.setInt(1, numAmende);
+	     stmt.setDate(2, new Date(System.currentTimeMillis()));
+	     stmt.setString(3, "apayer");
+	     stmt.execute();
+	     
+	     // la lier à la location
+	     stmt = conn.prepareStatement("UPDATE Loue"
+	     							+ " SET numAmende = ?"
+	     							+ " WHERE numVelo = ?"
+	     							+ " AND dateFin IS NULL");
+	     stmt.setInt(1, numAmende);
+	     stmt.setInt(2, numVelo);
+	     stmt.execute();
+
+	      // Close the result set, statement and the connection
+	      rs.close();
+	      stmt.close() ;
+	}
+
+	public static void mettreFinLocation(Connection conn, Timestamp now, int numVelo) throws SQLException{
+		  // Get a statement from the connection
+	     PreparedStatement stmt = conn.prepareStatement("UPDATE Loue"
+					+ " SET dateFin = ?"
+					+ " WHERE numVelo = ?"
+					+ " AND dateFin IS NULL");
+		 stmt.execute();
+		
+		 
+	      // Close the result set, statement and the connection
+	      stmt.close() ;
 	}
 
 }

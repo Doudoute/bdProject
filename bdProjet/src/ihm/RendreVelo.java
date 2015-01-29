@@ -1,6 +1,5 @@
 package ihm;
 
-import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -18,8 +17,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
 import mapping.Velo;
-import requetes.RequeteClient;
-import requetes.RequeteStation;
 import requetes.RequeteVelo;
 
 import java.awt.event.ActionListener;
@@ -103,9 +100,11 @@ public class RendreVelo {
 		
 		btnRendre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int code = Integer.parseInt(new String(passwordField.getPassword()));
-				int numVelo = (int)comboBox.getSelectedItem();
-				Rendre(code, numVelo);
+				if(!passwordField.getPassword().equals("")){
+					int code = Integer.parseInt(new String(passwordField.getPassword()));
+					int numVelo = Integer.parseInt((String)comboBox.getSelectedItem());
+					Rendre(code, numVelo);
+				}
 			}
 		});
 	}
@@ -127,28 +126,36 @@ public class RendreVelo {
 			
 			Timestamp now = new Timestamp(System.currentTimeMillis());
 			Timestamp loc = RequeteVelo.getDateDebutLocation(conn, numVelo); 
-
+			
+			
 
 			if(RequeteVelo.isSecretCodeCheckedForVelo(conn, code, numVelo)){
 				
 			    //retire le vélo des locations
 				RequeteVelo.removeVeloFromLocation(conn, numVelo);
+
 				
-				int numBornette = RequeteVelo.getNumBornetteLibre(conn, station );
-				
+				int numBornette = RequeteVelo.getNumBornetteLibre(conn, station);
+
 				if(numBornette!=-1){
 				    // insérer le vélo dans les stocks
 					RequeteVelo.putVeloInStation(conn, numVelo, numBornette);
+					System.out.println("Put OK ");
 					
 				    // changer l'état du vélo
 					RequeteVelo.miseAJourVelo(conn, numVelo, "enStation");
+					System.out.println("MàJ OK");
 					
 				    // mettre l'amende si jamais la durée excede 12h (43200000 millisecondes)
-
 					if ((now.getTime() - loc.getTime()) > 43200000 ){
 						// créer l'amende
-						
+						RequeteVelo.creerAmende(conn, numVelo);
 					}
+					
+					//mettre la date de fin à la location
+					RequeteVelo.mettreFinLocation(conn, now, numVelo);
+					JOptionPane.showMessageDialog(frmVpickClient, "Vous avez rendu le vélo : "+ numVelo);
+
 					
 				}
 				else{
@@ -163,8 +170,6 @@ public class RendreVelo {
 			
 			
 						
-			JOptionPane.showMessageDialog(frmVpickClient, "Vous avez rendu le vélo : "+ numVelo);
-			RequeteVelo.retirerVelo(conn, numVelo);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(frmVpickClient, "Erreur dans le rendu du Velo. Veuillez contacter le support si le problème se répète. \n" + e.toString() );
 		}
