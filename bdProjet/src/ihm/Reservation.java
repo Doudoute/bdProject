@@ -52,7 +52,7 @@ public class Reservation {
 			frame.setBounds(100, 100, 450, 322);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.getContentPane().setLayout(null);
-			lblNewLabel.setBounds(99, 12, 214, 31);
+			lblNewLabel.setBounds(98, 12, 214, 31);
 			frame.getContentPane().add(lblNewLabel);
 			
 			JLabel label = new JLabel("Numero de carte bleue : ");
@@ -75,11 +75,7 @@ public class Reservation {
 			frame.getContentPane().add(passwordField);
 			
 			JButton btnReserver = new JButton("Reserver >");
-			btnReserver.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					Reservation2();
-				}
-			});
+			
 			btnReserver.setFont(new Font("Dialog", Font.PLAIN, 12));
 			btnReserver.setBounds(317, 258, 117, 25);
 			frame.getContentPane().add(btnReserver);
@@ -101,7 +97,7 @@ public class Reservation {
 			lblNumeroDuClient.setBounds(12, 82, 164, 15);
 			frame.getContentPane().add(lblNumeroDuClient);
 			
-			JComboBox<String> comboBox_1 = new JComboBox<String>();
+			final JComboBox<String> comboBox_1 = new JComboBox<String>();
 			ArrayList<String> numAbo;
 			numAbo = RequeteClient.getAllNumAbo(conn);
 		
@@ -116,18 +112,30 @@ public class Reservation {
 			comboBox_1.setBounds(187, 77, 50, 24);
 			frame.getContentPane().add(comboBox_1);
 			
-			JRadioButton rdbtnNewRadioButton = new JRadioButton("Pour une journée");
+			final JRadioButton rdbtnNewRadioButton = new JRadioButton("Pour une journée");
 			rdbtnNewRadioButton.setSelected(true);
 			rdbtnNewRadioButton.setBounds(187, 164, 149, 23);
 			frame.getContentPane().add(rdbtnNewRadioButton);
 			
-			JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Pour une période");
+			final JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Pour une période");
 			rdbtnNewRadioButton_1.setBounds(187, 191, 149, 23);
 			frame.getContentPane().add(rdbtnNewRadioButton_1);
 			
 			ButtonGroup group = new ButtonGroup();
 		    group.add(rdbtnNewRadioButton);
 		    group.add(rdbtnNewRadioButton_1);
+		    
+		    btnReserver.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int numClient = Integer.parseInt((String)(comboBox_1.getSelectedItem()));
+					if(rdbtnNewRadioButton.isSelected()){
+						ReservationDay(numClient);
+					}
+					else{
+						ReservationPeriod(numClient);
+					}
+				}
+			});
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -135,16 +143,24 @@ public class Reservation {
 	}
 	
 
-		//retourne à l'accueil
-		private void Accueil() {
-			this.ab.setVisible(true);
-			this.frame.dispose();
-		}
-		
-		//etape 2 de la réservation
-		private void Reservation2() {
-			// TODO Auto-generated method stub
-			
+	//retourne à l'accueil
+	private void Accueil() {
+		this.ab.setVisible(true);
+		this.frame.dispose();
+	}
+	
+	//etape 2 de la réservation (un jour)
+	private void ReservationDay(int numClient) {
+		ReservationDay rsd = new ReservationDay(this, conn, station, numClient);
+		rsd.setVisible(true);
+		this.setVisible(false);
+	}
+	
+	//etape 2 de la réservation (une période)
+		private void ReservationPeriod(int numClient) {
+			ReservationPeriod rsp = new ReservationPeriod(this, conn, station, numClient);
+			rsp.setVisible(true);
+			this.setVisible(false);
 		}
 
 				

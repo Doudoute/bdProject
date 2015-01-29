@@ -83,7 +83,7 @@ public class RendreVelo {
 		frmVpickClient.getContentPane().add(comboBox);
 		
 		final JComboBox<String> comboBox_1 = new JComboBox<String>();
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"OK", "En panne"}));
+		comboBox_1.setModel(new DefaultComboBoxModel<String>(new String[] {"OK", "En panne"}));
 		comboBox_1.setBounds(100, 157, 70, 20);
 		frmVpickClient.getContentPane().add(comboBox_1);
 		
