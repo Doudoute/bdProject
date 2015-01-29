@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JPasswordField;
@@ -18,6 +19,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
+
+import requetes.RequeteStation;
 
 
 public class Application_Borne {
@@ -113,11 +120,7 @@ public class Application_Borne {
 		
 		JButton btnLouerUnVlo = new JButton("Louer un Vélo");
 		btnLouerUnVlo.setFont(new Font("Dialog", Font.PLAIN, 12));
-		btnLouerUnVlo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Location(conn);
-			}
-		});
+		
 		btnLouerUnVlo.setBounds(23, 53, 144, 122);
 		frmVpick.getContentPane().add(btnLouerUnVlo);
 		
@@ -140,12 +143,40 @@ public class Application_Borne {
 		btnNewButton_1.setFont(new Font("Dialog", Font.PLAIN, 12));
 		btnNewButton_1.setBounds(23, 198, 144, 122);
 		frmVpick.getContentPane().add(btnNewButton_1);
+		
+		final JComboBox<String> comboBox = new JComboBox<String>();
+		try {
+			ArrayList<String> listeStations = RequeteStation.getAllStationAdresses(conn);
+			String[] listeStationsTab = new String[listeStations.size()];
+			for(int i=0; i<listeStations.size(); i++){
+				String[] inter = listeStations.get(i).split(" - ");
+				listeStationsTab[i] = inter[0];
+			}
+			comboBox.setModel(new DefaultComboBoxModel<String>( listeStationsTab ));
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		
+		comboBox.setBounds(111, 365, 293, 24);
+		frmVpick.getContentPane().add(comboBox);
+		
+		JLabel lblNewLabel_1 = new JLabel("Station :");
+		lblNewLabel_1.setBounds(23, 370, 83, 15);
+		frmVpick.getContentPane().add(lblNewLabel_1);
+		
+		btnLouerUnVlo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String station = (String)(comboBox.getSelectedItem());
+				Location(conn, station);
+			}
+		});
 	}
 	
 	// Methode lancée lorsque l'on clique sur le bouton "Louer".
 	// Cache la fenêtre principale / ouvre la fenêtre de Location
-	private void Location(Connection conn) {
-		Location loc = new Location(this, conn);
+	private void Location(Connection conn, String station) {
+		Location loc = new Location(this, conn, station);
 		loc.setVisible(true);
 		this.setVisible(false);
 	}

@@ -1,8 +1,10 @@
 package requetes;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 
 public class RequeteStation {
@@ -131,6 +133,27 @@ public class RequeteStation {
 	      rs.close() ;
 	      stmt.close() ;
 		
+	}
+	
+	public static ArrayList<String> getAllStationAdresses(Connection conn) throws SQLException{
+
+		ArrayList<String> result = new ArrayList<String>();
+	      // Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("SELECT adresse FROM Station") ;
+
+	      // Execute the query
+	      ResultSet rs = stmt.executeQuery() ;
+
+	      // Loop through the result set
+	      while( rs.next() ) {
+		         result.add(rs.getString("adresse")) ;
+	      }
+	      
+	      // Close the result set, statement and the connection
+	      rs.close() ;
+	      stmt.close() ;
+	      
+	      return result;
 	}
 	
 	

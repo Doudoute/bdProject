@@ -396,14 +396,13 @@ INSERT INTO Ordre VALUES (04,03,03,'nonEffectue');
 INSERT INTO Ordre VALUES (05,03,06,'nonEffectue');
 INSERT INTO Ordre VALUES (06,03,10,'nonEffectue');
 
-
-INSERT INTO Amende VALUES (01,TO_DATE('01/01/2015','dd/mm/yyyy'), 'regularisee');
+INSERT INTO Amende VALUES (01,TO_DATE('01/01/2015','dd/mm/yyyy'), 'apayer');
 INSERT INTO Amende VALUES (02,TO_DATE('12/10/2014','dd/mm/yyyy'), 'apayer');
 INSERT INTO Amende VALUES (03,TO_DATE('14/12/2014','dd/mm/yyyy'), 'apayer');
 
 INSERT INTO Loue VALUES (20,0065,TO_DATE('11/10/2014 08:05','dd/mm/yyyy HH24:MI'),02,TO_DATE('13/10/2014 09:48','dd/mm/yyyy HH24:MI'));
 INSERT INTO Loue VALUES (20,0065,TO_DATE('13/12/2014 16:15','dd/mm/yyyy HH24:MI'),03,TO_DATE('15/01/2015 17:27','dd/mm/yyyy HH24:MI'));
-INSERT INTO Loue VALUES (13,0076,TO_DATE('13/12/2014 08:50','dd/mm/yyyy HH24:MI'),NULL,TO_DATE('13/12/2014 09:50','dd/mm/yyyy HH24:MI'));
+INSERT INTO Loue VALUES (13,0076,TO_DATE('13/12/2014 08:50','dd/mm/yyyy HH24:MI'),01,TO_DATE('13/12/2014 09:50','dd/mm/yyyy HH24:MI'));
 INSERT INTO Loue VALUES (10,0081,TO_DATE('01/09/2014 17:04','dd/mm/yyyy HH24:MI'),NULL,TO_DATE('01/09/2014 20:19','dd/mm/yyyy HH24:MI'));
 INSERT INTO Loue VALUES (01,0068,TO_DATE('02/09/2014 13:15','dd/mm/yyyy HH24:MI'),NULL,TO_DATE('02/09/2014 14:28','dd/mm/yyyy HH24:MI'));
 INSERT INTO Loue VALUES (01,0068,TO_DATE('03/09/2014 16:34','dd/mm/yyyy HH24:MI'),NULL,TO_DATE('03/09/2014 23:57','dd/mm/yyyy HH24:MI'));

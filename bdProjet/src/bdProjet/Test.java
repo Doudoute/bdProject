@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import requetes.RequeteAbonne;
 import requetes.RequeteClient;
 
 
@@ -87,7 +86,7 @@ public class Test {
 		  // Attribution d'un numero de client non utilise
 		  int numNouveauClient = RequeteClient.attribuerNumClient(conn);
 		  RequeteClient.ajouterClient(conn, numNouveauClient, "9999999999999999", 12345);
-		  RequeteAbonne.ajouterAbonne(conn, numNouveauClient, "Martin", "Mathieu", "21/04/1997", "masculin", "43 rue Fontaine de Barbin 44000 Nantes");
+		  //RequeteAbonne.ajouterAbonne(conn, numNouveauClient, "Martin", "Mathieu", "21/04/1997", "masculin", "43 rue Fontaine de Barbin 44000 Nantes");
 		  
 		  
 		  

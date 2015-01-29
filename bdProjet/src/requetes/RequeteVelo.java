@@ -132,20 +132,22 @@ public class RequeteVelo {
 	}
 	
 
-	//renvoie une liste de vélos disponibles
-	public static ArrayList<Velo> getVelosDispo(Connection conn) throws SQLException {
+	//renvoie une liste de vélos disponibles dans la station donnée
+	public static ArrayList<Velo> getVelosDispo(Connection conn, String nomStation) throws SQLException {
 		ArrayList<Velo> result= new ArrayList<Velo>();
 		  // Get a statement from the connection
 	      Statement stmt = conn.createStatement() ;
 
+
 	      // Execute the query
-	      ResultSet num = stmt.executeQuery("SELECT count(numPuceRFID) FROM Velo WHERE etatvelo = 'enStation'") ;
-	      num.next();
-	      System.out.println("Il y a actuellement "+ num.getString(1) +" Vélos en station" ) ;
+	      String query = "SELECT v.numPuceRFID, v.etatVelo "
+	    		  		+ "FROM Velo v, Bornette b, Stocke s "
+	    		  		+ "WHERE v.numPuceRFID = s.numVelo "
+	    		  		+ "AND s.numBornette = b.numBornette "
+	    		  		+" AND b.adresse like '"+nomStation +"%' "
+	    		  		+ "AND v.etatVelo = 'enStation' ";
 	      
-	      ResultSet rs = stmt.executeQuery("SELECT numPuceRFID, etatvelo FROM Velo WHERE etatvelo = 'enStation'") ;
-	      System.out.println("Liste des vélos actuellement en station avec leur numero : " ) ;
-	      // Loop through the result set
+	      ResultSet rs = stmt.executeQuery(query);
 	      while( rs.next() ) {
 	    	  result.add(new Velo(rs.getInt("numPuceRFID"), rs.getString("etatVelo")));
 	      }
