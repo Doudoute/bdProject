@@ -19,7 +19,7 @@ public class RequeteClient {
 	 * @param codeSecret le code secret du client a ajouter
 	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
 	 */
-	public static void ajouterClient(Connection conn, int numClient, String numCB, int codeSecret) throws SQLException {
+	public synchronized static void ajouterClient(Connection conn, int numClient, String numCB, int codeSecret) throws SQLException {
 		
 	      // Get a statement from the connection
 	      Statement stmt = conn.createStatement();
@@ -47,9 +47,10 @@ public class RequeteClient {
 		  Statement stmt = conn.createStatement();
 		  
 		  // Execute the query
-		  int dernierNumClientUtilise = stmt.executeUpdate("SELECT MAX(numClient) FROM Client");
+		  ResultSet dernierNumClientUtilise = stmt.executeQuery("SELECT MAX(numClient) FROM Client");
+		  dernierNumClientUtilise.next();
 		  
-		  int numNouveauClient = dernierNumClientUtilise + 1;
+		  int numNouveauClient = Integer.parseInt(dernierNumClientUtilise.getString(1)) + 1;
 		  
 		  // Close the result set, statement and the connection
 	      stmt.close();

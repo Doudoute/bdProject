@@ -55,7 +55,7 @@ modele VARCHAR(10),
 dateMES date NOT NULL,
 etatVelo VARCHAR(25),
 CONSTRAINT ck_modele_velo CHECK (modele IN ('pliant', 'electrique', 'VTT', 'route')),
-CONSTRAINT ck_etat_velo CHECK (etatVelo IN ('enStation', 'loue', 'embarque', 'réparation', 'enPanne'))
+CONSTRAINT ck_etat_velo CHECK (etatVelo IN ('enStation', 'embarque', 'réparation', 'enPanne'))
 );
 
 CREATE TABLE Amende (
@@ -104,6 +104,7 @@ CONSTRAINT ck_etat_ordre CHECK (etatOrdre IN ('nonEffectue', 'valide', 'annule',
 CREATE TABLE Stocke (
 numVelo INTEGER NOT NULL CHECK(numVelo > 0),
 numBornette INTEGER NOT NULL CHECK(numBornette > 0),
+dateStockage date NOT NULL,
 CONSTRAINT pk_stocke PRIMARY KEY (numVelo, numBornette),
 CONSTRAINT fk_stocke_numVelo FOREIGN KEY (numVelo) REFERENCES Velo(numPuceRFID),
 CONSTRAINT fk_stocke_numBornette FOREIGN KEY (numBornette) REFERENCES Bornette(numBornette)
@@ -114,7 +115,7 @@ numVelo integer NOT NULL CHECK(numVelo > 0),
 dateEbq date NOT NULL,
 numVehicule integer NOT NULL CHECK(numVehicule > 0),
 adresseDep varchar(150) NOT NULL,
-adresseArr varchar(150),
+adresseArr varchar(150) NOT NULL,
 CONSTRAINT pk_embarque PRIMARY KEY (numVelo, dateEbq),
 CONSTRAINT fk_embarque_numVelo FOREIGN KEY (numVelo) REFERENCES Velo(numPuceRFID),
 CONSTRAINT fk_embarque_numVehicule FOREIGN KEY (numVehicule) REFERENCES VehiculeRegulation(numVehicule)
@@ -153,8 +154,4 @@ CONSTRAINT ck_jour_semaine CHECK (jour IN ('Lundi', 'Mardi', 'Mercredi', 'Jeudi'
 CREATE TABLE Tarif (
 annee date NOT NULL PRIMARY KEY,
 montantLocation integer NOT NULL CHECK(montantLocation > 0)
-);
-
-CREATE TABLE Remise (
-numClient integer NOT NULL PRIMARY KEY 
 );
