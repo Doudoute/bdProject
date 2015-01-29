@@ -125,11 +125,7 @@ public class Application_Borne {
 		frmVpick.getContentPane().add(btnLouerUnVlo);
 		
 		JButton btnNewButton = new JButton("Réserver un Vélo");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Reservation(conn);
-			}
-		});
+		
 		btnNewButton.setFont(new Font("Dialog", Font.PLAIN, 12));
 		btnNewButton.setBounds(206, 53, 154, 122);
 		frmVpick.getContentPane().add(btnNewButton);
@@ -174,6 +170,13 @@ public class Application_Borne {
 				Rendu(conn, station);
 			}
 		});
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String station = (String)(comboBox.getSelectedItem());
+				Reservation(conn, station);
+			}
+		});
 	}
 	
 	// Methode lancée lorsque l'on clique sur le bouton "Louer".
@@ -186,8 +189,10 @@ public class Application_Borne {
 
 	// Methode lancée lorsque l'on clique sur le bouton "Reserver".
 	// Cache la fenêtre principale / ouvre la fenêtre de Reservation
-	private void Reservation(Connection conn) {
-		//TODO
+	private void Reservation(Connection conn, String station) {
+		Reservation resa = new Reservation(this, conn, station);
+		resa.setVisible(true);
+		this.setVisible(false);
 	}
 	
 	// Methode lancée lorsque l'on clique sur le bouton "Rendre".
