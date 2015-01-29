@@ -128,9 +128,40 @@ END;
 
 
 
--- 7) Pour un abonne qui beneficie de la remise Vplus, cette remise sera appliquee immediatement sur son prochain trajet. (Au moment de l insertion dans location)
+-- 7) Pour un abonne qui beneficie de la remise Vplus, cette remise sera appliquee immediatement sur son prochain trajet. 
+-- A faire au niveau de l application
 
--- 8) Les remises Vplus ne sont pas cumulables.
+-- 8) Les remises Vplus ne sont pas cumulables --> Suppression de la remise la plus ancienne avant l ajout de la nouvelle remise
+
+CREATE OR REPLACE TRIGGER before_insert_remise BEFORE INSERT ON RemiseNonAbonne FOR EACH ROW
+DECLARE 
+	nombreRemise int;
+	dateLaPlusVieille date;
+BEGIN
+	SELECT count(*) into nombreRemise FROM RemiseNonAbonne WHERE numNonAbonne = :new.numNonAbonne; 
+	SELECT max(dateRemise) into dateLaPlusVieille FROM RemiseNonAbonne WHERE numNonAbonne = :new.numNonAbonne; 
+	IF nombreRemise = 1 THEN
+		DELETE FROM RemiseNonAbonne WHERE numNonAbonne = :new.numNonAbonne and dateRemise = dateLaPlusVieille;
+	END IF;   
+END;
+/
+-- Test de CREATION d une remise non abonnee a un client qui en possede deja une (la plus recente doit etre gardee)
+-- INSERT INTO RemiseNonAbonne VALUES (60,TO_DATE('26/01/2015 19:25','dd/mm/yyyy HH24:MI'),3584);
+-- Observation : La remise la plus ancienne est bien supprimee
+-- Trace :
+-- SQL> select * from remisenonabonne where numnonabonne=60;
+-- 
+-- NUMNONABONNE DATEREMIS CODEREMISE
+-- ------------ --------- ----------
+--           60 25-JAN-15       3564
+-- SQL> INSERT INTO RemiseNonAbonne VALUES (60,TO_DATE('26/01/2015 19:25','dd/mm/yyyy HH24:MI'),3584);
+-- 
+-- 1 row created.
+-- SQL> select * from remisenonabonne where numnonabonne=60;
+-- 
+-- NUMNONABONNE DATEREMIS CODEREMISE
+-- ------------ --------- ----------
+--           60 26-JAN-15       3584
 
 -- 9) Pour les non abonnes disposant d une remise Vplus, le code identifiant pour activer la remise est valable un mois. (Au moment d une insertion dans location)
 
