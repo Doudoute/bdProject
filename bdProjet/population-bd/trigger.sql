@@ -137,23 +137,6 @@ END;
 -- 10) Pour les routines, chaque action doit Ãªtre validee avant de passer a  la suivante. (Au moment de l update d une tache)
 
 -- 11) La date d une reservation doit etre posterieure a  la date courante. (Au moment de l insertion dans reservation)
-CREATE OR REPLACE TRIGGER before_insert_reservation BEFORE INSERT
-ON RESERVATION FOR EACH ROW
-DECLARE 
-	forbidden_insert_reservation EXCEPTION;
-	dateDebLocation date;
-	date_current date;
-	date_temp varchar(20);
-BEGIN
-    -- Instructions
-    select to_char(SYSDATE,'yyyy/mm/dd:hh:miam') into date_temp from DUAL;
-    select to_date(date_temp,'yyyy/mm/dd:hh:miam') into date_current from DUAL;
-    IF  date_current > :new.dateDebut THEN
-	RAISE forbidden_create_location;
-    END IF; 
-EXCEPTION WHEN forbidden_create_location THEN Raise_application_error(-20324,'La date de location doit etre supérieure ou egale a la date actuelle.');
-END;
-/
 
 -- 12) Empecher reabonnement si un abonnement est deja  en cours
 -- Impossible depuis modification du modele de donnee, en effet pas d archivage. Seul l abonnement en cours est visible.
@@ -250,3 +233,32 @@ END;
 -- SHOW ERROR TRIGGER before_insert_loue3;
 
 -- 17) Si le client loue un velo a une station Vplus et qu il le rend a une station Vmoins --> creation d une remise Vplus
+
+-- 18) La periode de debut doit être inferieure à la date de fin de periode
+
+CREATE OR REPLACE TRIGGER before_create_periode BEFORE INSERT
+ON PERIODE FOR EACH ROW
+DECLARE 
+	forbidden_create_periode EXCEPTION;
+BEGIN
+    -- Instructions
+    IF  :new.numSemaineDebut >= :new.numSemaineFin THEN
+	RAISE forbidden_create_periode;
+    END IF; 
+EXCEPTION WHEN forbidden_create_periode THEN Raise_application_error(-20324,'La semaine de debut de periode doit etre inferieure ou egale a la semaine de fin de periode.');
+END;
+/
+
+-- Test de CREATION d'une periode avec une semaine de debut superieure a la semaine de fin.
+-- insert into periode values (14,1,5,'Lundi'); --> Marche bien parce que la chronologie des semaines est respectée
+-- insert into periode values (13,5,1,'Lundi');
+-- Observation : L'erreur est levee
+-- Trace : 
+-- SQL> insert into periode values (13,5,1,'Lundi');
+-- insert into periode values (13,5,1,'Lundi')
+--             *
+-- ERROR at line 1:
+-- ORA-20324: La semaine de debut de periode doit etre inferieure ou egale a la
+-- semaine de fin de periode.
+-- ORA-06512: at "MICHAULU.BEFORE_CREATE_PERIODE", line 8
+-- ORA-04088: error during execution of trigger 'MICHAULU.BEFORE_CREATE_PERIODE'
