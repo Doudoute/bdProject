@@ -82,6 +82,12 @@ public class RendreVelo {
 		comboBox.setBounds(100, 113, 70, 24);
 		frmVpickClient.getContentPane().add(comboBox);
 		
+		final JComboBox<String> comboBox_1 = new JComboBox<String>();
+		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"OK", "En panne"}));
+		comboBox_1.setBounds(100, 157, 70, 20);
+		frmVpickClient.getContentPane().add(comboBox_1);
+		
+		
 		JButton button = new JButton("< Retour");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -98,12 +104,19 @@ public class RendreVelo {
 		btnRendre.setBounds(317, 236, 117, 25);
 		frmVpickClient.getContentPane().add(btnRendre);
 		
+		JLabel lblEtat = new JLabel("Etat");
+		lblEtat.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblEtat.setBounds(12, 162, 70, 15);
+		frmVpickClient.getContentPane().add(lblEtat);
+
+		
 		btnRendre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!passwordField.getPassword().equals("")){
 					int code = Integer.parseInt(new String(passwordField.getPassword()));
 					int numVelo = Integer.parseInt((String)comboBox.getSelectedItem());
-					Rendre(code, numVelo);
+					String etat = (String)comboBox_1.getSelectedItem();
+					Rendre(code, numVelo, etat);
 				}
 			}
 		});
@@ -119,11 +132,11 @@ public class RendreVelo {
 		this.frmVpickClient.setVisible(b);
 	}
 	
-	private void Rendre(int code, int numVelo) {
+	private void Rendre(int code, int numVelo, String etat) {
 		try {
 			ArrayList<Velo> velosDispo = RequeteVelo.getVelosDispo(conn, station);
 			int numBorne = RequeteVelo.retrieveNumBornetteByNumVelo(conn, numVelo);
-			
+
 			Timestamp now = new Timestamp(System.currentTimeMillis());
 			Timestamp loc = RequeteVelo.getDateDebutLocation(conn, numVelo); 
 			
@@ -140,11 +153,9 @@ public class RendreVelo {
 				if(numBornette!=-1){
 				    // insérer le vélo dans les stocks
 					RequeteVelo.putVeloInStation(conn, numVelo, numBornette);
-					System.out.println("Put OK ");
 					
 				    // changer l'état du vélo
 					RequeteVelo.miseAJourVelo(conn, numVelo, "enStation");
-					System.out.println("MàJ OK");
 					
 				    // mettre l'amende si jamais la durée excede 12h (43200000 millisecondes)
 					if ((now.getTime() - loc.getTime()) > 43200000 ){
@@ -154,9 +165,10 @@ public class RendreVelo {
 					
 					//mettre la date de fin à la location
 					RequeteVelo.mettreFinLocation(conn, now, numVelo);
+					if(etat.equals("En panne")){
+						RequeteVelo.setVeloEnPanne(conn, numVelo);
+					}
 					JOptionPane.showMessageDialog(frmVpickClient, "Vous avez rendu le vélo : "+ numVelo);
-
-					
 				}
 				else{
 					JOptionPane.showMessageDialog(frmVpickClient, "Plus aucune bornette libre !");
@@ -167,11 +179,11 @@ public class RendreVelo {
 			else{
 				JOptionPane.showMessageDialog(frmVpickClient, "Erreur de code secret !");
 			}
-			
-			
 						
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(frmVpickClient, "Erreur dans le rendu du Velo. Veuillez contacter le support si le problème se répète. \n" + e.toString() );
 		}
 	}
 }
+
+
