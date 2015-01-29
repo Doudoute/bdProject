@@ -1,3 +1,5 @@
+DROP TABLE RemiseNonAbonne;
+DROP TABLE RemiseAbonne;
 DROP TABLE Periode;
 DROP TABLE Reserve;
 DROP TABLE Loue;
@@ -15,6 +17,7 @@ DROP TABLE Tache;
 DROP TABLE Bornette;
 DROP TABLE Station;
 DROP TABLE Tarif;
+
 
 CREATE TABLE Station (
 adresse VARCHAR(150) PRIMARY KEY NOT NULL,
@@ -158,7 +161,7 @@ montantLocation integer NOT NULL CHECK(montantLocation > 0)
 CREATE TABLE RemiseNonAbonne (
 numNonAbonne integer NOT NULL PRIMARY KEY,
 dateRemise date NOT NULL,
-codeRemise UNIQUE integer NOT NULL,
+codeRemise integer NOT NULL,
 CONSTRAINT fk_remise_non_abonne FOREIGN KEY (numNonAbonne) REFERENCES NonAbonne(numNonAbo)
 );
 
