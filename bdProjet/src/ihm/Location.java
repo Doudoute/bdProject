@@ -1,5 +1,6 @@
 package ihm;
 
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -18,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -34,7 +34,6 @@ public class Location {
 	private Client client ;
 	
 	private JFrame frmVpickClient;
-	private JTextField cbField;
 	private JPasswordField passwordField;
 	private String station;
 	
@@ -83,26 +82,30 @@ public class Location {
 		lblNumeroDeCarte.setBounds(12, 59, 164, 15);
 		frmVpickClient.getContentPane().add(lblNumeroDeCarte);
 		
-		cbField = new JTextField();
-		cbField.setBounds(187, 54, 112, 24);
-		frmVpickClient.getContentPane().add(cbField);
-		
-		/*final JComboBox<String> comboBox = new JComboBox<String>();
+		final JComboBox<String> comboBox = new JComboBox<String>();
 		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"7894929078949290", "9264323592643235"}));
 		comboBox.setBounds(187, 54, 112, 24);
-		frmVpickClient.getContentPane().add(comboBox);*/
+		frmVpickClient.getContentPane().add(comboBox);
 		
 		JButton btnVzaluider = new JButton("Valider");
 		btnVzaluider.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String numCB = cbField.getText();
-				int code = Integer.parseInt(new String(passwordField.getPassword()));
+				String numCB = "";
+				int code = 0;
 				try {
+					numCB = (String)(comboBox.getSelectedItem());
+					if(!passwordField.getPassword().equals("")){
+						code = Integer.parseInt(new String(passwordField.getPassword()));
+					}
 					client = RequeteClient.retrieveClientByCBandSecretCode(conn, code, numCB);
-					Next(code,numCB);
-				} catch (SQLException e) {
+					if(client==null){
+						JOptionPane.showMessageDialog(frmVpickClient, "Erreur d'authentification");
+					}
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
+
+				Louer(code,numCB);
 			}
 		});
 		btnVzaluider.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -123,18 +126,18 @@ public class Location {
 		JButton btnMeGnrerUn = new JButton("Me générer un code ");
 		btnMeGnrerUn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String numCB = cbField.getText();
+				String numCB = (String)(comboBox.getSelectedItem());
 				int code = GenererCode();
 				JOptionPane.showMessageDialog(frmVpickClient, "Votre code est : "+code+"\n RETENEZ LE BIEN");
 				try {
+					//TODO créer un client à la place
 					int numClient =  RequeteClient.attribuerNumClient(conn);
-					RequeteClient.ajouterClient(conn, numClient, numCB, code);
-					client = new Client(numClient, code,numCB);
-					Next(code, numCB);
+					 RequeteClient.ajouterClient(conn, numClient, numCB, code); 
+					 client = new Client(numClient, code, numCB);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				Louer(code, numCB);
 			}
 		});
 		
@@ -164,18 +167,19 @@ public class Location {
 	
 	// poursuit la location avec le code secret du client 
 	// ou le code généré par l'application
-	private void Next(int code, String numCB) {
+	private void Louer(int code, String numCB) {
 
 		try {
 			ArrayList<Velo> velosDispo = RequeteVelo.getVelosDispo(conn, station);
 			int numVelo = velosDispo.get(0).getNumRFID();
 			int numBorne = RequeteVelo.retrieveNumBornetteByNumVelo(conn, numVelo);
 
-			RequeteVelo.creerLocation(conn, velosDispo.get(0).getNumRFID(), client.getNumClient());
+			RequeteVelo.creerLocation(conn, numVelo, client.getNumClient());
 			JOptionPane.showMessageDialog(frmVpickClient, "Location créée : \n"
 														+ "Client N°" +client.getNumClient()+
 														"\n Velo N°"+numVelo+
 														"\n Allez le chercher à la BORNE N°"+numBorne);
+			RequeteVelo.retirerVelo(conn, numVelo);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(frmVpickClient, "Erreur dans la location du Velo. Veuillez contacter le support si le problème se répète. \n" + e.toString() );
 		}
@@ -185,7 +189,7 @@ public class Location {
 	private int GenererCode() {
 		
 		// TODO Auto-generated method stub
-		
+
 		/* METHODE SALE (mais pratique)
 		 * Générer un code aléatoire
 		 * vérifier que personne d'autre ne l'a 
@@ -193,7 +197,7 @@ public class Location {
 		 * CREER LE CLIENT dans la base
 		 * et initialiser le Client client dans cette classe
 		 */
-		Random rand = new Random();
-		return rand.nextInt(Integer.MAX_VALUE);
+
+		return 1234;
 	}
 }
