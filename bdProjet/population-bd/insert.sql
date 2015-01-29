@@ -434,4 +434,3 @@ INSERT INTO Tarif VALUES (TO_DATE('2011','yyyy'),19);
 INSERT INTO Tarif VALUES (TO_DATE('2010','yyyy'),18);
 INSERT INTO Tarif VALUES (TO_DATE('2009','yyyy'),15);
 
-commit;
