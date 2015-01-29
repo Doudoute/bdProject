@@ -137,7 +137,7 @@ public class AbonnementRenseignementsFrame extends JFrame {
 		rdbtnFminin.setBounds(79, 89, 149, 23);
 		contentPane.add(rdbtnFminin);
 		
-		JRadioButton rdbtnMasculin = new JRadioButton("Masculin");
+		final JRadioButton rdbtnMasculin = new JRadioButton("Masculin");
 		buttonGroup.add(rdbtnMasculin);
 		rdbtnMasculin.setBounds(250, 89, 149, 23);
 		contentPane.add(rdbtnMasculin);
@@ -170,11 +170,34 @@ public class AbonnementRenseignementsFrame extends JFrame {
 		JButton btnValider = new JButton("Valider");
 		btnValider.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(rdbtnFminin.isSelected()){
-					System.out.println("Feminin");
-				}
-				if ((textFieldNom.getText().equals("")) | (textFieldPrenom.getText().equals("")) | (textFieldJourNaissance.getText().equals("")) | (textFieldMoisNaissance.getText().equals("")) | (textFieldAnneeNaissance.getText().equals("")) | (textFieldAdresse.getText().equals("")) | (textFieldNumeroCarte.getText().equals("")) | (textFieldCodeSecret.getText().equals(""))){
+				if((! rdbtnFminin.isSelected()) & (! rdbtnMasculin.isSelected())){
 					lblAttentionChampsInvalides.setVisible(true);
+				}
+				else {
+					lblAttentionChampsInvalides.setVisible(false);
+					if ((textFieldNom.getText().equals("")) | (textFieldPrenom.getText().equals("")) | (textFieldJourNaissance.getText().equals("")) | (textFieldMoisNaissance.getText().equals("")) | (textFieldAnneeNaissance.getText().equals("")) | (textFieldAdresse.getText().equals("")) | (textFieldNumeroCarte.getText().equals("")) | (textFieldCodeSecret.getText().equals(""))){
+						lblAttentionChampsInvalides.setVisible(true);
+					}
+					else{
+						lblAttentionChampsInvalides.setVisible(false);
+					}
+				}
+				if(! lblAttentionChampsInvalides.isVisible()){
+					String nom = textFieldNom.getText();
+					String prenom = textFieldPrenom.getText();
+					String dateNaissance = textFieldJourNaissance.getText() + "/" + textFieldMoisNaissance.getText() + "/" + textFieldAnneeNaissance.getText();
+					String sexe;
+					if(rdbtnFminin.isSelected()){
+						sexe = "feminin";
+					}
+					else {
+						sexe = "masculin";
+					}
+					String adresse = textFieldAdresse.getText();
+					String numCB = textFieldNumeroCarte.getText();
+					int codeSecret = Integer.parseInt(textFieldCodeSecret.getText());
+					dispose();
+					AbonnementRealisationFrame.main(conn, nom, prenom, dateNaissance, sexe, adresse, numCB, codeSecret);
 				}
 			}
 		});

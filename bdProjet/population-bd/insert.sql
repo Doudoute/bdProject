@@ -10,7 +10,7 @@ INSERT INTO Bornette VALUES (01,'OK','Rue Sully - 44000 Nantes');
 INSERT INTO Bornette VALUES (02,'OK','Rue Sully - 44000 Nantes');
 INSERT INTO Bornette VALUES (03,'OK','Rue Sully - 44000 Nantes');
 INSERT INTO Bornette VALUES (04,'OK','Rue Sully - 44000 Nantes');
-INSERT INTO Bornette VALUES (05,'HS','Rue Sully - 44000 Nantes');
+INSERT INTO Bornette VALUES (05,'OK','Rue Sully - 44000 Nantes');
 INSERT INTO Bornette VALUES (06,'OK','Rue Sully - 44000 Nantes');
 INSERT INTO Bornette VALUES (07,'OK','Rue Sully - 44000 Nantes');
 INSERT INTO Bornette VALUES (08,'OK','Rue Sully - 44000 Nantes');

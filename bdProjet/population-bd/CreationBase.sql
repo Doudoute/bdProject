@@ -154,3 +154,7 @@ CREATE TABLE Tarif (
 annee date NOT NULL PRIMARY KEY,
 montantLocation integer NOT NULL CHECK(montantLocation > 0)
 );
+
+CREATE TABLE Remise (
+numClient integer NOT NULL PRIMARY KEY 
+);

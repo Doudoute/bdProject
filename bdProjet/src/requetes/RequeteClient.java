@@ -19,7 +19,7 @@ public class RequeteClient {
 	 * @param codeSecret le code secret du client a ajouter
 	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
 	 */
-	public static void ajouterClient(Connection conn, int numClient, String numCB, int codeSecret) throws SQLException {
+	public synchronized static void ajouterClient(Connection conn, int numClient, String numCB, int codeSecret) throws SQLException {
 		
 	      // Get a statement from the connection
 	      Statement stmt = conn.createStatement();
