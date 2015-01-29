@@ -72,11 +72,23 @@ public class ConducteurFrame extends JFrame {
 		contentPane.add(btnConsulterRoutine);
 		
 		JButton btnDplacerVlos = new JButton("Déplacer Vélos");
+		btnDplacerVlos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				DebarquementFrame.main(conn,log);
+			}
+		});
 		btnDplacerVlos.setBounds(35, 111, 180, 90);
 		contentPane.add(btnDplacerVlos);
 		
 		JButton btnValiderRoutine = new JButton("Valider Routine");
 		btnValiderRoutine.setBounds(240, 111, 180, 90);
+		btnValiderRoutine.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				ValiderRoutineFrame.main(conn,log);
+			}
+		});
 		contentPane.add(btnValiderRoutine);
 		
 		JButton btnRenseignerRparations = new JButton("Rens.Réparations");

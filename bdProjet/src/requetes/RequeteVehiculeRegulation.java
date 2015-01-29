@@ -107,4 +107,25 @@ public class RequeteVehiculeRegulation {
 	      }
 		return resultat;
 	}
+	
+	public static String[] getVeloEmbarques(Connection conn, String numVehicule) throws SQLException{
+		
+		// Get a statement from the connection
+	      Statement stmt = conn.createStatement() ;
+	      ResultSet rs = stmt.executeQuery("Select count(numVelo) from embarque where numVehicule ="+numVehicule);
+	      rs.next();
+	      
+	      String[] resultat = new String[Integer.parseInt(rs.getString(1))];
+	      
+	      rs = stmt.executeQuery("Select numVelo from embarque where numVehicule ="+numVehicule);
+	      int i = 0;
+		    while( rs.next() ) {
+				resultat[i] = rs.getString("numvelo");
+		        i++;
+		      }
+		
+		
+		return resultat;
+	}
+	
 }
