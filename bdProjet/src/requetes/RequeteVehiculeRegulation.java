@@ -3,8 +3,36 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class RequeteVehiculeRegulation {
+	
+	/**
+	 * Récupère tous les numéros de véhicules
+	 * 
+	 * @param conn connexion a la base de donnees
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
+	public static Integer[] getNumVehicules(Connection conn) throws SQLException {
+		  ArrayList<Integer> myArrayList = new ArrayList<Integer>();
+
+	      // Get a statement from the connection
+	      Statement stmt = conn.createStatement();
+
+	      // Execute the query	      
+	      ResultSet rs = stmt.executeQuery("Select numvehicule from vehiculeregulation");
+	      
+	      while( rs.next() ) {
+	    	  myArrayList.add(rs.getInt("NUMVEHICULE")) ;
+		      }
+
+	      // Close the result set, statement and the connection
+	      stmt.close() ;
+		
+	      Integer[] myArray = myArrayList.toArray(new Integer[myArrayList.size()]);
+	      return myArray;
+	}
+	
 	/**
 	 * Ajout d'un Vehicule dans la base de donnees
 	 * 

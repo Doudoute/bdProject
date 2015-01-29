@@ -51,7 +51,7 @@ public class ConducteurFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnVloEndommag = new JButton("Modif.État Vélos");
+		JButton btnVloEndommag = new JButton("Modifier v�lo");
 		btnVloEndommag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();

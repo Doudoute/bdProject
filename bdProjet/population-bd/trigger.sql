@@ -118,15 +118,54 @@ END;
 -- insert into LOUE values (42, 0020, to_date(to_char(SYSDATE,'yyyy/mm/dd:hh:miam') ,'yyyy/mm/dd:hh:miam'), null, null)
 --             *
 -- ERROR at line 1:
--- ORA-20322: Location interdite : une location est d?j? en cours.
+-- ORA-20322: Location interdite : une location est deja en cours.
 -- ORA-06512: at "MICHAULU.BEFORE_INSERT_LOUE2", line 9
 -- ORA-04088: error during execution of trigger 'MICHAULU.BEFORE_INSERT_LOUE2'
 
 -- SHOW ERROR TRIGGER before_insert_loue2;
 
--- 6) Si la reservation d un client est en conflit avec les reservations d autres clients alors la reservations ne peut pas aboutir. (Au moment de la creation d une reservation)
+-- 6) Si la reservation d un client est en conflit avec les reservations d autres clients alors la reservation ne peut pas aboutir. (Au moment de la creation d une reservation)
 
+CREATE OR REPLACE TRIGGER before_insert_reservation2 BEFORE INSERT ON Reserve FOR EACH ROW
+DECLARE 
+	forbidden_insert_reserve EXCEPTION;
+	CURSOR c1 IS SELECT * FROM Reserve natural join Periode where numVelo = :new.numVelo; 
+	UnTuple c1%ROWTYPE;
+	newSemDebut int;
+	newSemFin int;
+BEGIN
+	SELECT numSemaineDebut into newSemDebut FROM Periode where numPeriode = :new.numPeriode; 
+	Select numSemaineFin into newSemFin FROM Periode where numPeriode = :new.numPeriode; 
+	OPEN c1; 
+	FETCH c1 INTO UnTuple; 
+	WHILE (c1%FOUND) LOOP
+		IF newSemDebut >= UnTuple.numSemaineDebut and newSemDebut <= UnTuple.numSemaineFin THEN
+			RAISE forbidden_insert_reserve;
+		ELSIF newSemFin >= UnTuple.numSemaineDebut and newSemFin <= UnTuple.numSemaineFin THEN
+			RAISE forbidden_insert_reserve;
+		ELSIF newSemDebut <= UnTuple.numSemaineDebut and newSemFin >= UnTuple.numSemaineFin THEN
+			RAISE forbidden_insert_reserve;
+		END IF;
+		FETCH c1 INTO UnTuple;
+	END LOOP; 
+	CLOSE c1;
+EXCEPTION WHEN forbidden_insert_reserve THEN Raise_application_error(-20322,'Reservation interdite : une reservation precedemment effectuee est en conflit.');
+END;
+/
 
+-- Test de CREATION d une remise non abonnee a un client qui en possede deja une (la plus recente doit etre gardee)
+-- INSERT INTO Reserve VALUES (0068,02,04);
+-- Observation : L erreur est bien levee
+-- Trace :
+-- SQL> INSERT INTO Reserve VALUES (0068,02,04);
+-- INSERT INTO Reserve VALUES (0068,02,04)
+--             *
+-- ERROR at line 1:
+-- ORA-20322: Reservation interdite : une reservation precedemment effectuee est
+-- en conflit.
+-- ORA-06512: at "MICHAULU.BEFORE_INSERT_RESERVATION2", line 23
+-- ORA-04088: error during execution of trigger
+-- 'MICHAULU.BEFORE_INSERT_RESERVATION2'
 
 -- 7) Pour un abonne qui beneficie de la remise Vplus, cette remise sera appliquee immediatement sur son prochain trajet. 
 -- A faire au niveau de l application
@@ -163,11 +202,11 @@ END;
 -- ------------ --------- ----------
 --           60 26-JAN-15       3584
 
--- 9) Pour les non abonnes disposant d une remise Vplus, le code identifiant pour activer la remise est valable un mois. (Au moment d une insertion dans location)
+-- 9) Pour les non abonnes disposant d une remise Vplus, le code identifiant pour activer la remise est valable un mois. 
+-- pas de declencheur pour faire ca au niveau des trigger --> a faire au niveau de l application
 
--- 10) Pour les routines, chaque action doit Ãªtre validee avant de passer a  la suivante. (Au moment de l update d une tache)
+-- 10) Pour les routines, chaque action doit etre validee avant de passer a  la suivante. (Au moment de l update d une tache)
 
--- 11) La date d une reservation doit etre posterieure a  la date courante. (Au moment de l insertion dans reservation)
 
 -- 12) Empecher reabonnement si un abonnement est deja  en cours
 -- Impossible depuis modification du modele de donnee, en effet pas d archivage. Seul l abonnement en cours est visible.
@@ -264,6 +303,19 @@ END;
 -- SHOW ERROR TRIGGER before_insert_loue3;
 
 -- 17) Si le client loue un velo a une station Vplus et qu il le rend a une station Vmoins --> creation d une remise Vplus
+CREATE OR REPLACE TRIGGER before_update_loue BEFORE UPDATE
+ON LOUE FOR EACH ROW
+DECLARE 
+	
+BEGIN
+    -- Instructions
+    
+    IF  :new.numSemaineDebut >= :new.numSemaineFin THEN
+	RAISE forbidden_create_periode;
+    END IF; 
+EXCEPTION WHEN forbidden_create_periode THEN Raise_application_error(-20324,'La semaine de debut de periode doit etre inferieure ou egale a la semaine de fin de periode.');
+END;
+/
 
 -- 18) La periode de debut doit être inferieure à la date de fin de periode
 

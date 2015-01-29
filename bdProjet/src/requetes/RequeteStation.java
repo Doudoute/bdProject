@@ -156,5 +156,26 @@ public class RequeteStation {
 	      return result;
 	}
 	
+	public static ArrayList<Integer> getAllBornetteLibre(Connection conn) throws SQLException{
+
+		ArrayList<Integer> result = new ArrayList<Integer>();
+	      // Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("SELECT numbornette FROM Station natural join Bornette WHERE numbornette NOT IN (SELECT numbornette from STOCKE)") ;
+
+	      // Execute the query
+	      ResultSet rs = stmt.executeQuery() ;
+
+	      // Loop through the result set
+	      while( rs.next() ) {
+		         result.add(rs.getInt("numbornette")) ;
+	      }
+	      
+	      // Close the result set, statement and the connection
+	      rs.close() ;
+	      stmt.close() ;
+	      
+	      return result;
+	}
+	
 	
 }

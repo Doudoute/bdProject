@@ -160,6 +160,33 @@ public class RequeteVelo {
 	      return result;
 	}
 	
+	//renvoie une liste de vélos HS dans la station donnée
+	public static ArrayList<Velo> getVelosHS(Connection conn, String nomStation) throws SQLException {
+		ArrayList<Velo> result= new ArrayList<Velo>();
+		  // Get a statement from the connection
+	      Statement stmt = conn.createStatement() ;
+
+
+	      // Execute the query
+	      String query = "SELECT v.numPuceRFID, v.etatVelo "
+	    		  		+ "FROM Velo v, Bornette b, Stocke s "
+	    		  		+ "WHERE v.numPuceRFID = s.numVelo "
+	    		  		+ "AND s.numBornette = b.numBornette "
+	    		  		+" AND b.adresse like '"+nomStation +"%' "
+	    		  		+ "AND v.etatVelo = 'enPanne' ";
+	      
+	      ResultSet rs = stmt.executeQuery(query);
+	      while( rs.next() ) {
+	    	  result.add(new Velo(rs.getInt("numPuceRFID"), rs.getString("etatVelo")));
+	      }
+	      
+	      // Close the result set, statement and the connection
+	      rs.close() ;
+	      stmt.close() ;
+	      
+	      return result;
+	}
+	
 	//renvoie le numéro de la boprne associée à un numéro
 	public static int retrieveNumBornetteByNumVelo (Connection conn, int numPuceRFID) throws SQLException {
 		  int result = -1;
