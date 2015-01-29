@@ -215,4 +215,136 @@ public class RequeteVelo {
 	      stmt.close() ;
 	}
 
+	public static void retirerVelo(Connection conn, int numVelo) throws SQLException {
+		
+		 // Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("DELETE FROM Stocke WHERE numVelo = ?");
+	      stmt.setInt(1, numVelo);
+	      
+	      // Execute the query
+	      stmt.execute();
+
+	      // Close the result set, statement and the connection
+	      stmt.close() ;
+	}
+
+	public static ArrayList<Velo> getVelosLoues(Connection conn) throws SQLException {
+		ArrayList<Velo> result= new ArrayList<Velo>();
+		  // Get a statement from the connection
+	      Statement stmt = conn.createStatement() ;
+
+
+	      // Execute the query
+	      String query = "SELECT numPuceRFID, etatVelo "
+	    		  		+ "FROM Velo  "
+	    		  		+ "WHERE etatVelo = 'loue' ";
+	      
+	      ResultSet rs = stmt.executeQuery(query);
+	      while( rs.next() ) {
+	    	  result.add(new Velo(rs.getInt("numPuceRFID"), rs.getString("etatVelo")));
+	      }
+	      
+	      // Close the result set, statement and the connection
+	      rs.close() ;
+	      stmt.close() ;
+	      
+	      return result;
+	}
+
+
+	public static boolean isSecretCodeCheckedForVelo(Connection conn, int code, int numVelo) throws SQLException {
+		 // Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Velo v, Loue l, Client c"
+		      		+ " WHERE v.numPuceRFID = l.numVelo"
+		      		+ " AND l.numClient = c.numClient"
+		      		+ " AND v.numPuceRFID = ?"
+		      		+ " AND c.codeSecret = ?");
+	      stmt.setInt(1, numVelo);
+	      stmt.setInt(2, code);
+
+	      ResultSet rs = stmt.executeQuery();
+	      boolean result = rs.next();
+	      
+	      // Close the result set, statement and the connection
+	      rs.close() ;
+	      stmt.close() ;
+
+		return result;
+	}
+
+	//retirer le vélo des vélos loués
+	public static void removeVeloFromLocation(Connection conn, int numVelo) throws SQLException{
+		 // Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("DELETE FROM Location WHERE numVelo = ?");
+	      stmt.setInt(1, numVelo);
+
+	      ResultSet rs = stmt.executeQuery();
+	      
+	      // Close the result set, statement and the connection
+	      rs.close() ;
+	      stmt.close() ;
+
+	}
+
+	// retourne le premier numéro de bornette LIBRE dans la station donnée
+	public static int getNumBornetteLibre(Connection conn, String station) throws SQLException{
+		int result = -1;
+		// Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("SELECT numBornette "
+	      												+ " FROM Bornette"
+	      												+ " WHERE Bornette.adresse like '%?'"
+	      												+ " AND numBornette NOT INT("
+	      														+ "SELECT numBornette"
+	      														+ "FROM bornette b, Velo v, Stocke s"
+	      														+ "WHERE b.numBornette = s;numBornette"
+	      														+ "AND s.numVelo = v.numPuceRFID) ");
+	      stmt.setString(1, station);
+	      ResultSet rs = stmt.executeQuery();
+	      
+	      if(rs.next()){
+	    	  result = rs.getInt("numBornette");
+	      }
+	      // Close the result set, statement and the connection
+	      rs.close() ;
+	      stmt.close() ;
+	      
+	      return result;
+	}
+
+	// mettre le vélo dans la station (créer une relation dans "Stocke")
+	public static void putVeloInStation(Connection conn, int numVelo, int numBornette) throws SQLException{
+		// Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("INSERT INTO Stocke values(?,?)");
+
+	      stmt.setInt(1, numVelo);
+	      stmt.setInt(2, numBornette);
+	      
+	       stmt.execute();
+
+	      // Close the result set, statement and the connection
+
+	      stmt.close() ;
+	      
+	}
+
+	public static Timestamp getDateDebutLocation(Connection conn, int numVelo) throws SQLException{
+  		  Timestamp result = null;
+		  // Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("SELECT dateDebut"
+	      												+ " FROM Loue"
+	      												+ " WHERE numVelo = ?"
+	      												+ " AND dateFin IS NULL");
+	      stmt.setInt(1, numVelo);
+	      ResultSet rs = stmt.executeQuery();
+	      
+	      if(rs.next()){
+	    	  result = rs.getTimestamp("dateDebut");
+	      }
+	      // Close the result set, statement and the connection
+	      rs.close() ;
+	      stmt.close() ;
+	      
+	      return result;
+	}
+
 }

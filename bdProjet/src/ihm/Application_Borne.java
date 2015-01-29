@@ -135,11 +135,7 @@ public class Application_Borne {
 		frmVpick.getContentPane().add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Rendre un Vélo");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Rendu(conn);
-			}
-		});
+		
 		btnNewButton_1.setFont(new Font("Dialog", Font.PLAIN, 12));
 		btnNewButton_1.setBounds(23, 198, 144, 122);
 		frmVpick.getContentPane().add(btnNewButton_1);
@@ -171,6 +167,13 @@ public class Application_Borne {
 				Location(conn, station);
 			}
 		});
+		
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String station = (String)(comboBox.getSelectedItem());
+				Rendu(conn, station);
+			}
+		});
 	}
 	
 	// Methode lancée lorsque l'on clique sur le bouton "Louer".
@@ -189,8 +192,10 @@ public class Application_Borne {
 	
 	// Methode lancée lorsque l'on clique sur le bouton "Rendre".
 	// Cache la fenêtre principale / ouvre la fenêtre de Rendu de vélo
-	private void Rendu(Connection conn) {
-		//TODO
+	private void Rendu(Connection conn, String station) {
+		RendreVelo rendu = new RendreVelo(this, conn, station);
+		rendu.setVisible(true);
+		this.setVisible(false);
 	}
 	
 	//Quitter l'application
