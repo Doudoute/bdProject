@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -33,6 +34,7 @@ public class Location {
 	private Client client ;
 	
 	private JFrame frmVpickClient;
+	private JTextField cbField;
 	private JPasswordField passwordField;
 	private String station;
 	
@@ -81,23 +83,26 @@ public class Location {
 		lblNumeroDeCarte.setBounds(12, 59, 164, 15);
 		frmVpickClient.getContentPane().add(lblNumeroDeCarte);
 		
-		final JComboBox<String> comboBox = new JComboBox<String>();
+		cbField = new JTextField();
+		cbField.setBounds(187, 54, 112, 24);
+		frmVpickClient.getContentPane().add(cbField);
+		
+		/*final JComboBox<String> comboBox = new JComboBox<String>();
 		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"7894929078949290", "9264323592643235"}));
 		comboBox.setBounds(187, 54, 112, 24);
-		frmVpickClient.getContentPane().add(comboBox);
+		frmVpickClient.getContentPane().add(comboBox);*/
 		
 		JButton btnVzaluider = new JButton("Valider");
 		btnVzaluider.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String numCB = (String)(comboBox.getSelectedItem());
+				String numCB = cbField.getText();
 				int code = Integer.parseInt(new String(passwordField.getPassword()));
 				try {
 					client = RequeteClient.retrieveClientByCBandSecretCode(conn, code, numCB);
+					Next(code,numCB);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-
-				Next(code,numCB);
 			}
 		});
 		btnVzaluider.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -118,10 +123,18 @@ public class Location {
 		JButton btnMeGnrerUn = new JButton("Me générer un code ");
 		btnMeGnrerUn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String numCB = (String)(comboBox.getSelectedItem());
+				String numCB = cbField.getText();
 				int code = GenererCode();
 				JOptionPane.showMessageDialog(frmVpickClient, "Votre code est : "+code+"\n RETENEZ LE BIEN");
-				Next(code, numCB);
+				try {
+					int numClient =  RequeteClient.attribuerNumClient(conn);
+					RequeteClient.ajouterClient(conn, numClient, numCB, code);
+					client = new Client(numClient, code,numCB);
+					Next(code, numCB);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -180,7 +193,7 @@ public class Location {
 		 * CREER LE CLIENT dans la base
 		 * et initialiser le Client client dans cette classe
 		 */
-
-		return 0;
+		Random rand = new Random();
+		return rand.nextInt(Integer.MAX_VALUE);
 	}
 }
