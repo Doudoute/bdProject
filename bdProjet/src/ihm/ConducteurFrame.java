@@ -90,15 +90,7 @@ public class ConducteurFrame extends JFrame {
 			}
 		});
 		contentPane.add(btnValiderRoutine);
-		
-		JButton btnRenseignerRparations = new JButton("Rens.Réparations");
-		btnRenseignerRparations.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnRenseignerRparations.setBounds(35, 213, 180, 90);
-		contentPane.add(btnRenseignerRparations);
-		
+				
 		JButton btnNewButton = new JButton("Quitter");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

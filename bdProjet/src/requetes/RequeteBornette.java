@@ -3,6 +3,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class RequeteBornette {
@@ -133,5 +136,26 @@ public class RequeteBornette {
 	      }
 	    return resultat;
 	}
+	
+	public static void associerVeloBornette(Connection conn, String adresse, int numVelo) throws SQLException {
+		// Get a statement from the connection
+	      Statement stmt = conn.createStatement() ;
+	    // Execute the query
+	      ResultSet rs = stmt.executeQuery("select min(numbornette) "
+	      								 + "from bornette"
+	      								 + " where adresse like '"+adresse+"%'  "
+	      								 + " AND numbornette NOT IN (select numbornette from stocke) and etat='OK'");
+	    
+	      rs.next();
+	      int numbornette = rs.getInt(1);
+	      
+		  System.out.println(numVelo);
+		  System.out.println(numbornette);
+		  stmt.executeUpdate("UPDATE Velo set etatVelo = 'enStation' where numpucerfid = "+numVelo);
+		  stmt.executeUpdate("DELETE from Embarque where numVelo= "+numVelo);
+		  stmt.executeUpdate("INSERT INTO Stocke VALUES (" +numVelo +" , "+ numbornette+")");
 		
+		
+	}
+	
 }

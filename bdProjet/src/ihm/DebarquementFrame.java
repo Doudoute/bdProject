@@ -56,7 +56,7 @@ public class DebarquementFrame extends JFrame {
 		scrollPane.setBounds(12, 38, 165, 172);
 		contentPane.add(scrollPane);
 		
-		JList list = new JList();
+		final JList list = new JList();
 		scrollPane.setViewportView(list);
 		
 		String[] listeVeloEmbarque = new String[30];
@@ -78,7 +78,7 @@ public class DebarquementFrame extends JFrame {
 		scrollPane_1.setBounds(243, 38, 165, 172);
 		contentPane.add(scrollPane_1);
 		
-		JList list_1 = new JList();
+		final JList list_1 = new JList();
 		scrollPane_1.setViewportView(list_1);
 		
 		String[] listeBornesStr = new String[30];
@@ -99,6 +99,14 @@ public class DebarquementFrame extends JFrame {
 		JButton btnAssocier = new JButton("Associer");
 		btnAssocier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				String adresse = list_1.getSelectedValue().toString();
+				int numVelo = Integer.parseInt(list.getSelectedValue().toString());
+				try {
+					RequeteBornette.associerVeloBornette(conn, adresse, numVelo);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		btnAssocier.setBounds(60, 236, 117, 25);
