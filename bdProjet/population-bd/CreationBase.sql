@@ -155,6 +155,14 @@ annee date NOT NULL PRIMARY KEY,
 montantLocation integer NOT NULL CHECK(montantLocation > 0)
 );
 
-CREATE TABLE Remise (
-numClient integer NOT NULL PRIMARY KEY 
+CREATE TABLE RemiseNonAbonne (
+numNonAbonne integer NOT NULL PRIMARY KEY,
+dateRemise date NOT NULL,
+codeRemise UNIQUE integer NOT NULL,
+CONSTRAINT fk_remise_non_abonne FOREIGN KEY (numNonAbonne) REFERENCES NonAbonne(numNonAbo)
+);
+
+CREATE TABLE RemiseAbonne (
+numAbonne integer NOT NULL PRIMARY KEY,
+CONSTRAINT fk_remise_abonne FOREIGN KEY (numAbonne) REFERENCES Abonne(numAbonne)
 );

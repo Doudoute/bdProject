@@ -3,6 +3,7 @@ package ihm;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
@@ -104,6 +105,16 @@ public class AbonnementReabonnementFrame extends JFrame {
 		});
 		btnReAbo.setBounds(241, 97, 193, 120);
 		contentPane.add(btnReAbo);
+		
+		JButton btnVisualiserLeTarif = new JButton("Visualiser le tarif de l'année en cours");
+		btnVisualiserLeTarif.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				TarifLocationFrame.main(conn);
+			}
+		});
+		btnVisualiserLeTarif.setBounds(60, 229, 312, 25);
+		contentPane.add(btnVisualiserLeTarif);
 
 	}
 }
