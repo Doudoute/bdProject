@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import mapping.Client;
 
@@ -116,6 +117,26 @@ public class RequeteClient {
 	      ResultSet rs = stmt.executeQuery();
 	      if( rs.next() ) {
 	    	  result = new Client(rs.getInt("numClient"), rs.getInt("codeSecret"),rs.getString("numCB"));
+	      }
+
+	      // Close the result set, statement and the connection
+	      rs.close();
+	      stmt.close() ;
+	      
+	      return result;
+	}
+
+	// renvoie la liste de tous le snuméros des Abonnés sous forme de liste de String
+	public static ArrayList<String> getAllNumAbo(Connection conn) throws SQLException{
+		
+		  // Get a statement from the connection
+	      PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Abonne");
+
+	      ArrayList<String> result = new ArrayList<String>();
+	      // Execute the query
+	      ResultSet rs = stmt.executeQuery();
+	      while( rs.next() ) {
+	    	  result.add(new Integer(rs.getInt("numAbonne")).toString());
 	      }
 
 	      // Close the result set, statement and the connection

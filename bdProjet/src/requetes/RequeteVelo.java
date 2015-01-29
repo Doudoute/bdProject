@@ -421,11 +421,24 @@ public class RequeteVelo {
 					+ " SET dateFin = ?"
 					+ " WHERE numVelo = ?"
 					+ " AND dateFin IS NULL");
+	     stmt.setTimestamp(1, now);
+	     stmt.setInt(2, numVelo);
 		 stmt.execute();
-		
 		 
 	      // Close the result set, statement and the connection
-	      stmt.close() ;
+	      stmt.close();
+	}
+
+	public static void setVeloEnPanne(Connection conn, int numVelo) throws SQLException {
+		 // Get a statement from the connection
+	     PreparedStatement stmt = conn.prepareStatement("UPDATE Velo"
+					+ " SET etat = 'enPanne'"
+					+ " WHERE numVelo = ?");
+	     stmt.setInt(1, numVelo);
+		 stmt.execute();
+		 
+	      // Close the result set, statement and the connection
+	      stmt.close();
 	}
 
 }
