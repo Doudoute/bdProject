@@ -162,7 +162,6 @@ public class Reservation {
 			rsp.setVisible(true);
 			this.setVisible(false);
 		}
-
 				
 	public void setVisible(boolean b) {
 		frame.setVisible(b);

@@ -432,8 +432,8 @@ public class RequeteVelo {
 	public static void setVeloEnPanne(Connection conn, int numVelo) throws SQLException {
 		 // Get a statement from the connection
 	     PreparedStatement stmt = conn.prepareStatement("UPDATE Velo"
-					+ " SET etat = 'enPanne'"
-					+ " WHERE numVelo = ?");
+					+ " SET etatVelo = 'enPanne'"
+					+ " WHERE numPuceRFID = ?");
 	     stmt.setInt(1, numVelo);
 		 stmt.execute();
 		 

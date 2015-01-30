@@ -99,12 +99,12 @@ public class Application_Borne {
 	 */
 	private void initialize() {
 		frmVpick = new JFrame();
-		frmVpick.setTitle("VÃ©Pick - Client");
+		frmVpick.setTitle("VePick - Client");
 		frmVpick.setBounds(100, 100, 450, 444);
 		frmVpick.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmVpick.getContentPane().setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Bienvenue sur l'application VÃ©Pick");
+		JLabel lblNewLabel = new JLabel("Bienvenue sur l'application VePick");
 		lblNewLabel.setBounds(111, 12, 249, 15);
 		frmVpick.getContentPane().add(lblNewLabel);
 		
@@ -118,19 +118,19 @@ public class Application_Borne {
 		btnQuitter.setBounds(206, 198, 154, 122);
 		frmVpick.getContentPane().add(btnQuitter);
 		
-		JButton btnLouerUnVlo = new JButton("Louer un VÃ©lo");
+		JButton btnLouerUnVlo = new JButton("Louer un Vélo");
 		btnLouerUnVlo.setFont(new Font("Dialog", Font.PLAIN, 12));
 		
 		btnLouerUnVlo.setBounds(23, 53, 144, 122);
 		frmVpick.getContentPane().add(btnLouerUnVlo);
 		
-		JButton btnNewButton = new JButton("RÃ©server un VÃ©lo");
+		JButton btnNewButton = new JButton("Réserver un Vélo");
 		
 		btnNewButton.setFont(new Font("Dialog", Font.PLAIN, 12));
 		btnNewButton.setBounds(206, 53, 154, 122);
 		frmVpick.getContentPane().add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("Rendre un VÃ©lo");
+		JButton btnNewButton_1 = new JButton("Rendre un Vélo");
 		
 		btnNewButton_1.setFont(new Font("Dialog", Font.PLAIN, 12));
 		btnNewButton_1.setBounds(23, 198, 144, 122);
