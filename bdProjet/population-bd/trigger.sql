@@ -63,7 +63,6 @@ BEGIN
 		CLOSE c1;
 	END IF;   
 EXCEPTION WHEN forbidden_create_loue THEN Raise_application_error(-20323,'Location interdite : amende de plus d un mois ou deux amendes non régularisée.');
-END;
 /
 --Test de CREATION d'une location avec un client qui possede deux amendes non regularisees
 -- SELECT count(numAmende) FROM AMENDE natural join LOUE WHERE numClient = 65;
